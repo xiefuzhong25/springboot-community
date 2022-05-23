@@ -1,24 +1,44 @@
 package com.xiefuzhong.community.service;
 
 
-import com.xiefuzhong.community.dao.UserMapper;
+
 import com.xiefuzhong.community.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
-public class UserService {
+import java.sql.SQLException;
+import java.util.Map;
 
-    @Autowired
-    private UserMapper userMapper;
+public interface UserService {
+//    User checkUserById(Integer id);
 
-    /**
-     * 根据用户id 查询用户信息
-     * @param id
-     * @return
-     */
-    public User findUserById(int id) {
-        return userMapper.selectById(id);
-    }
+    Map<String, Object> register(User user) throws IllegalAccessException, SQLException;
 
+//    User checkUserByIdCodeActivate(Integer id, String codeActivate);
+
+//    Integer reviseStatusById(Integer id, String status);
+
+//    Map<String, Object> login(String username, String password, int daysExpired) throws IllegalAccessException, SQLException;
+
+//    TicketLogin checkTicketLoginByUsernameTicketStatus(String username, String ticket, String status);
+
+//    UserLogined checkUserLoginedByUsername(String username);
+
+//    Integer reviseStatusTicketLoginById(Integer id, String status);
+
+//    Map<String, Object> logout(String username, String ticket) throws SQLException;
+
+//    Integer reviseUrlHeaderByUsername(Integer id, String urlHeader);
+
+//    Map<String, Object> revisePassword(Integer id, String passwordOld, String passwordNew) throws IllegalAccessException, SQLException;
+
+//    Map<String, Object> reviseInformation(UserLogined userLogined) throws IllegalAccessException, SQLException;
+
+//    UserLogined checkUserLoginedById(Integer id);
+
+//    User checkUserByUsername(String username);
+
+//    Integer revisePasswordByEmail(String email, String password, String random);
+
+//    User checkUserByEmail(String email);
+
+//    Map<String, Object> sendCaptchaEmail(String email);
 }

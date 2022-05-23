@@ -5,7 +5,7 @@ import com.xiefuzhong.community.entity.DiscussPost;
 import com.xiefuzhong.community.entity.Page;
 import com.xiefuzhong.community.entity.User;
 import com.xiefuzhong.community.service.DiscussPostService;
-import com.xiefuzhong.community.service.UserService;
+import com.xiefuzhong.community.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +24,7 @@ public class HomeController {
     private DiscussPostService discussPostService;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @RequestMapping(path = "/index", method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page) {
