@@ -113,6 +113,9 @@ public class UserServiceImpl implements UserService , CommunityConstant {
         return map;
     }
 
+
+
+
     /**
      * 点击邮件激活账户
      * @param userId
@@ -190,10 +193,16 @@ public class UserServiceImpl implements UserService , CommunityConstant {
         return map;
     }
 
+    //退出登录
     @Override
     public void logout( String ticket)  {
         loginTicketMapper.updateStatus(ticket, 1);
     }
 
+    //通过ticket查询出一条ticket数据
+    @Override
+    public LoginTicket findLoginTicket(String ticket) {
+        return loginTicketMapper.selectByTicket(ticket);
+    }
 
 }

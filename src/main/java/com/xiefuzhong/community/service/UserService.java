@@ -2,19 +2,23 @@ package com.xiefuzhong.community.service;
 
 
 
+import com.xiefuzhong.community.entity.LoginTicket;
 import com.xiefuzhong.community.entity.User;
 
 import java.sql.SQLException;
 import java.util.Map;
 
 public interface UserService {
-//    User checkUserById(Integer id);
-
-    Map<String, Object> register(User user) throws IllegalAccessException, SQLException;
 
     Map<String, Object> login(String username, String password, int expiredSeconds) throws IllegalAccessException, SQLException;
 
     void logout( String ticket) ;
+
+    Map<String, Object> register(User user) throws IllegalAccessException, SQLException;
+
+    LoginTicket  findLoginTicket(String ticket);
+
+    User findUserById(int userId);
 
 //    User checkUserByIdCodeActivate(Integer id, String codeActivate);
 
