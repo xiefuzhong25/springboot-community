@@ -1,27 +1,41 @@
 package com.xiefuzhong.community.controller;
 
+import com.google.code.kaptcha.Producer;
 import com.xiefuzhong.community.dao.UserMapper;
 import com.xiefuzhong.community.entity.User;
 import com.xiefuzhong.community.service.impl.UserServiceImpl;
 
 import com.xiefuzhong.community.util.CommunityConstant;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.Map;
 
 
 @Controller
 public class LoginController implements CommunityConstant {
 
+    private  static  final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
     @Autowired
     private UserServiceImpl userService;
 
-//    @Autowired
-//    private Producer kaptcheProducer;
+    @Autowired
+    private Producer kaptcheProducer;
 //
 //    @Autowired
 //    private RedisTemplate redisTemplate;
@@ -64,6 +78,13 @@ public class LoginController implements CommunityConstant {
         }
     }
 
+    /**
+     * 点击邮箱文件激活账号
+     * @param model
+     * @param userId
+     * @param code
+     * @return
+     */
     ////http://localhost:8080/community/activate/101/code
     @RequestMapping(path = "/activate/{userId}/{code}",method = RequestMethod.GET)
     public   String activation(Model model,@PathVariable("userId") int userId,@PathVariable("code") String code){
@@ -79,7 +100,74 @@ public class LoginController implements CommunityConstant {
             model.addAttribute("target","/index");
         }
         return "/site/operate-result";
+    }
 
+    /**
+     * 注册生成动态验证码
+     * @param response
+     * @param session
+     */
+    @RequestMapping(path = "/kaptcha",method = RequestMethod.GET)
+    public  void getKaptcha(HttpServletResponse response, HttpSession session)
+    {
+        //生成验证码
+        String text = kaptcheProducer.createText();
+        BufferedImage image = kaptcheProducer.createImage(text);
+        //将验证码存到session
+        session.setAttribute("kaptcha",text);
+        response.setContentType("image/png");
+
+        try {
+            //将该图片输出到浏览器
+            OutputStream os = response.getOutputStream();
+            ImageIO.write(image,"png",os);
+        } catch (IOException e) {
+            logger.error("响应码验证失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 验证登录
+     * @param username
+     * @param password
+     * @param code
+     * @param rememberme
+     * @param model
+     * @param session
+     * @param response
+     * @return
+     */
+    @RequestMapping(path = "/login", method = RequestMethod.POST)
+    public String login(String username, String password, String code, boolean rememberme,
+                        Model model, HttpSession session, HttpServletResponse response) {
+        // 检查验证码
+        String kaptcha = (String) session.getAttribute("kaptcha");
+        if (StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code) || !kaptcha.equalsIgnoreCase(code)) {
+            model.addAttribute("codeMsg", "验证码不正确!");
+            return "/site/login";
+        }
+
+        // 检查账号,密码
+        int expiredSeconds = rememberme ? REMEMBER_EXPIRED_SECONDS : DEFAULT_EXPIRED_SECONDS;
+        Map<String, Object> map = userService.login(username, password, expiredSeconds);
+        if (map.containsKey("ticket")) {
+            Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
+            cookie.setPath(contextPath);
+            cookie.setMaxAge(expiredSeconds);
+            //将cookie发送给浏览器
+            response.addCookie(cookie);
+            return "redirect:/index";
+        } else {
+            model.addAttribute("usernameMsg", map.get("usernameMsg"));
+            model.addAttribute("passwordMsg", map.get("passwordMsg"));
+            return "/site/login";
+        }
+    }
+
+    @RequestMapping(path = "/logout", method = RequestMethod.GET)
+    public String logout(@CookieValue("ticket") String ticket) {
+        userService.logout(ticket);
+        return "redirect:/login";
     }
 
 }

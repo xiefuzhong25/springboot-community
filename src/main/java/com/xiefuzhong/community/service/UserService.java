@@ -12,19 +12,19 @@ public interface UserService {
 
     Map<String, Object> register(User user) throws IllegalAccessException, SQLException;
 
+    Map<String, Object> login(String username, String password, int expiredSeconds) throws IllegalAccessException, SQLException;
+
+    void logout( String ticket) ;
+
 //    User checkUserByIdCodeActivate(Integer id, String codeActivate);
 
 //    Integer reviseStatusById(Integer id, String status);
-
-//    Map<String, Object> login(String username, String password, int daysExpired) throws IllegalAccessException, SQLException;
 
 //    TicketLogin checkTicketLoginByUsernameTicketStatus(String username, String ticket, String status);
 
 //    UserLogined checkUserLoginedByUsername(String username);
 
 //    Integer reviseStatusTicketLoginById(Integer id, String status);
-
-//    Map<String, Object> logout(String username, String ticket) throws SQLException;
 
 //    Integer reviseUrlHeaderByUsername(Integer id, String urlHeader);
 

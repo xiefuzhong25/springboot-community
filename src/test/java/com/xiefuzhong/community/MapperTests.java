@@ -1,6 +1,8 @@
 package com.xiefuzhong.community;
 
+import com.xiefuzhong.community.dao.LoginTicketMapper;
 import com.xiefuzhong.community.dao.UserMapper;
+import com.xiefuzhong.community.entity.LoginTicket;
 import com.xiefuzhong.community.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @Description:
@@ -24,6 +27,9 @@ public class MapperTests {
     @Resource
     private UserMapper userMapper;
 
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
+
     @Test
     public  void  testSelectUser(){
         User user = userMapper.selectById(101);
@@ -34,5 +40,25 @@ public class MapperTests {
         System.out.println(user3);
     }
 
+    @Test
+    public void testInsertLoginTicket() {
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(101);
+        loginTicket.setTicket("abc");
+        loginTicket.setStatus(0);
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + 1000 * 60 * 10));
+
+        loginTicketMapper.insertLoginTicket(loginTicket);
+    }
+
+    @Test
+    public void testSelectLoginTicket() {
+        LoginTicket loginTicket = loginTicketMapper.selectByTicket("abc");
+        System.out.println(loginTicket);
+
+        loginTicketMapper.updateStatus("abc", 1);
+        loginTicket = loginTicketMapper.selectByTicket("abc");
+        System.out.println(loginTicket);
+    }
 
 }
