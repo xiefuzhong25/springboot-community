@@ -53,6 +53,9 @@ public class UserServiceImpl implements UserService , CommunityConstant {
         return userMapper.selectById(id);
     }
 
+
+
+
     /**
      * 注册账号
      * @param user
@@ -205,4 +208,20 @@ public class UserServiceImpl implements UserService , CommunityConstant {
         return loginTicketMapper.selectByTicket(ticket);
     }
 
+    //更新用户账号头像
+
+    public void updateHeader(int userId, String headerUrl) {
+        //        return userMapper.updateHeader(userId, headerUrl);
+        int rows = userMapper.updateHeader(userId, headerUrl);
+//        clearCache(userId);
+    }
+
+
+
+
+    // 3.数据变更时清除缓存数据
+//    private void clearCache(int userId) {
+//        String redisKey = RedisKeyUtil.getUserKey(userId);
+//        redisTemplate.delete(redisKey);
+//    }
 }

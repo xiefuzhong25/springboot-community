@@ -20,6 +20,9 @@ public interface UserService {
 
     User findUserById(int userId);
 
+
+    void updateHeader(int id, String headerUrl);
+
 //    User checkUserByIdCodeActivate(Integer id, String codeActivate);
 
 //    Integer reviseStatusById(Integer id, String status);

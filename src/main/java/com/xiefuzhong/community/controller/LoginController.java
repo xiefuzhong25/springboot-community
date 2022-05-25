@@ -78,13 +78,7 @@ public class LoginController implements CommunityConstant {
         }
     }
 
-    /**
-     * 点击邮箱文件激活账号
-     * @param model
-     * @param userId
-     * @param code
-     * @return
-     */
+    //点击邮箱文件激活账号 
     ////http://localhost:8080/community/activate/101/code
     @RequestMapping(path = "/activate/{userId}/{code}",method = RequestMethod.GET)
     public   String activation(Model model,@PathVariable("userId") int userId,@PathVariable("code") String code){
@@ -102,11 +96,7 @@ public class LoginController implements CommunityConstant {
         return "/site/operate-result";
     }
 
-    /**
-     * 注册生成动态验证码
-     * @param response
-     * @param session
-     */
+   //生成动态验证码
     @RequestMapping(path = "/kaptcha",method = RequestMethod.GET)
     public  void getKaptcha(HttpServletResponse response, HttpSession session)
     {
@@ -126,17 +116,7 @@ public class LoginController implements CommunityConstant {
         }
     }
 
-    /**
-     * 验证登录
-     * @param username
-     * @param password
-     * @param code
-     * @param rememberme
-     * @param model
-     * @param session
-     * @param response
-     * @return
-     */
+    //验证登录
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(String username, String password, String code, boolean rememberme,
                         Model model, HttpSession session, HttpServletResponse response) {
