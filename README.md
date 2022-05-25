@@ -44,4 +44,17 @@
         访问账号设置页面
         上传头像
         获取头像
-      
+        
+6.检查登录状态
+    使用拦截器
+        在方法前面标注自定义注解
+        拦截所有请求，只处理带有该注解的方法
+    自定义注解
+        常用的元注解
+        @Target|  作用在哪：方法。类。属性上
+        @Retention|   声明自定义注解保存有效的时间点，编译时还是运行时
+        @Document|    声明文档的时候要不要带上这个注解
+        @Inherited      用于继承；子类继承父类的注解
+        如何读取注解
+        Method.getDeclaredAnnotations()     
+        Method.getAnnotation(Class<T> annotationClass)

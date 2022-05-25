@@ -1,4 +1,4 @@
-package com.xiefuzhong.community.controller.interceptor;
+package com.xiefuzhong.community.interceptor;
 
 
 import com.xiefuzhong.community.entity.LoginTicket;
@@ -17,6 +17,7 @@ import java.util.Date;
 
 @Component
 public class LoginTicketInterceptor implements HandlerInterceptor {
+    //介绍：主要是控制显示登录信息，以及页面头部的展示
 
     @Autowired
     private UserService userService;
@@ -26,6 +27,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         // 从cookie中获取凭证
         String ticket = CookieUtil.getValue(request, "ticket");
 

@@ -1,4 +1,4 @@
-package com.xiefuzhong.community.controller.interceptor;
+package com.xiefuzhong.community.interceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

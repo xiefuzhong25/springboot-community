@@ -1,6 +1,7 @@
 package com.xiefuzhong.community.controller;
 
 
+import com.xiefuzhong.community.annotation.LoginRequired;
 import com.xiefuzhong.community.entity.User;
 import com.xiefuzhong.community.service.UserService;
 import com.xiefuzhong.community.util.CommunityConstant;
@@ -51,11 +52,14 @@ public class UserController implements CommunityConstant {
 //    @Autowired
 //    private FollowService followService;
 
+    @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
     public String getSettingPage() {
         return "/site/setting";
     }
 
+    //上传头像
+    @LoginRequired
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImage, Model model) {
         if (headerImage == null) {
@@ -98,6 +102,7 @@ public class UserController implements CommunityConstant {
         return "redirect:/index";
     }
 
+    //获取头像图片，展示到页面
     @RequestMapping(path = "/header/{fileName}", method = RequestMethod.GET)
     public void getHeader(@PathVariable("fileName") String fileName, HttpServletResponse response) {
         // 服务器存放路径(目前放在本地电脑）
