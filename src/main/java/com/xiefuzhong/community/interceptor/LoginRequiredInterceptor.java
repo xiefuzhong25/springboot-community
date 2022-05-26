@@ -28,6 +28,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
             //按照指定的类型去去注解
             LoginRequired loginRequired = method.getAnnotation(LoginRequired.class);
             if (loginRequired != null && hostHolder.getUser() == null) {
+                //有方法中使用了自定义注解，并且从该次线程中没有得到用户信息：非法请求
                 response.sendRedirect(request.getContextPath() + "/login");
                 return false;
             }

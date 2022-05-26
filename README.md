@@ -58,3 +58,13 @@
         如何读取注解
         Method.getDeclaredAnnotations()     
         Method.getAnnotation(Class<T> annotationClass)
+        
+7.过滤敏感词
+    前缀树
+        名称：Trie  字典树  查找树
+        特点：查找效率高，消耗内存大
+        应用：字符串检索，词频统计，字符串排序等
+    敏感词过滤器
+        定义前缀树
+        根据敏感词，初始化前缀树
+        编写过滤敏感词的方法
