@@ -4,7 +4,7 @@ package com.xiefuzhong.community.controller;
 import com.xiefuzhong.community.entity.DiscussPost;
 import com.xiefuzhong.community.entity.Page;
 import com.xiefuzhong.community.entity.User;
-import com.xiefuzhong.community.service.DiscussPostService;
+import com.xiefuzhong.community.service.impl.DiscussPostServiceImpl;
 import com.xiefuzhong.community.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class HomeController {
 
     @Autowired
-    private DiscussPostService discussPostService;
+    private DiscussPostServiceImpl discussPostService;
 
     @Autowired
     private UserServiceImpl userService;
