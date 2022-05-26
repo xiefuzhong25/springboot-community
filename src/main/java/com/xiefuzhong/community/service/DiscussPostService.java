@@ -16,4 +16,6 @@ public interface DiscussPostService {
 
     public int addDiscussPost(DiscussPost post);
 
+    public  DiscussPost  findDiscussPostId(int id);
+
 }
