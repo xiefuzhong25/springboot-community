@@ -41,6 +41,7 @@ public class DiscussPostServiceImpl implements DiscussPostService {
         return discussPostMapper.selectDiscussPostRows(userId);
     }
 
+    //新增贴子
     @Override
     public int addDiscussPost(DiscussPost post) {
         if (post == null) {
@@ -57,9 +58,16 @@ public class DiscussPostServiceImpl implements DiscussPostService {
         return discussPostMapper.insertDiscussPost(post);
     }
 
+    //通过贴子的id找到贴子详细信息
     @Override
     public DiscussPost findDiscussPostId(int id) {
         return discussPostMapper.selectDiscussPostById(id);
+    }
+
+    //更新贴子中评论的数量
+    @Override
+    public int updateCommentCount(int id, int commentCount) {
+        return discussPostMapper.updateCommentCount(id, commentCount);
     }
 
 
