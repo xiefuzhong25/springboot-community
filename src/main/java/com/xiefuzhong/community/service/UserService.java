@@ -22,6 +22,9 @@ public interface UserService {
 
     void updateHeader(int id, String headerUrl);
 
+    User findUserByName(String username);
+
+
 //    User checkUserByIdCodeActivate(Integer id, String codeActivate);
 
 //    Integer reviseStatusById(Integer id, String status);

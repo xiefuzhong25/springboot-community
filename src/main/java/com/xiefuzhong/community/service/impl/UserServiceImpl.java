@@ -209,14 +209,17 @@ public class UserServiceImpl implements UserService , CommunityConstant {
     }
 
     //更新用户账号头像
-
+    @Override
     public void updateHeader(int userId, String headerUrl) {
         //        return userMapper.updateHeader(userId, headerUrl);
         int rows = userMapper.updateHeader(userId, headerUrl);
 //        clearCache(userId);
     }
 
-
+    @Override
+    public User findUserByName(String username) {
+        return userMapper.selectByName(username);
+    }
 
 
     // 3.数据变更时清除缓存数据
