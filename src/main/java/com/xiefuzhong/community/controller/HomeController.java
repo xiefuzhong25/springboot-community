@@ -49,4 +49,10 @@ public class HomeController {
         return "/index";
     }
 
+    //统一异常处理类中（控制器通知），重定向需要用到
+    @RequestMapping(path = "/error", method = RequestMethod.GET)
+    public String getErrorPage() {
+        return "/error/500";
+    }
+
 }
