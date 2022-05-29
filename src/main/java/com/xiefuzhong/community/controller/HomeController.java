@@ -4,8 +4,11 @@ package com.xiefuzhong.community.controller;
 import com.xiefuzhong.community.entity.DiscussPost;
 import com.xiefuzhong.community.entity.Page;
 import com.xiefuzhong.community.entity.User;
+import com.xiefuzhong.community.service.LikeService;
 import com.xiefuzhong.community.service.impl.DiscussPostServiceImpl;
 import com.xiefuzhong.community.service.impl.UserServiceImpl;
+import com.xiefuzhong.community.util.CommunityConstant;
+import com.xiefuzhong.community.util.CommunityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,13 +21,16 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstant {
 
     @Autowired
     private DiscussPostServiceImpl discussPostService;
 
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private LikeService likeService;
 
     @RequestMapping(path = "/index", method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page) {
@@ -42,6 +48,11 @@ public class HomeController {
                 map.put("post", post);
                 User user = userService.findUserById(post.getUserId());
                 map.put("user", user);
+
+                //查询主页中贴子的赞的数量
+                long  likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST ,post.getId());
+                map.put("likeCount",likeCount);
+
                 discussPosts.add(map);
             }
         }

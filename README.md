@@ -187,3 +187,25 @@
                     采用底层的字节码技术，在运行时创建子类代理实例
                     当目标对象不存在接口时，spring aop 会采用此种方法，在子类实例中织入代码  
                     
+16.Spring整合redis
+    引入依赖
+        spring-boot-start-redis
+    配置Redis
+        配置数据库参数
+        编写配置类，构造RedisTemplate(spring中默认的key是object，但是我们一般使用string,所以重新配，用我们自己的方便)
+    访问Redis
+        redisTemplate.opsForValue()  //string   set/get
+        redisTemplate.opsForHash()   //hash     put/get
+        redisTemplate.opsForList()  //list      leftPush/leftPop
+        redisTemplate.opsForSet()   //set       add/pop
+        redisTemplate.opsForZSet() // zset`     add/rank|range
+        
+17.点赞（redis)
+    点赞
+        支持对贴子，评论的点赞
+        第1次点赞，第二次点击取消
+    首页点赞数量
+        统计贴子的点赞数量
+    详情页点赞数量
+        统计点赞数量
+        显示点赞状态      
