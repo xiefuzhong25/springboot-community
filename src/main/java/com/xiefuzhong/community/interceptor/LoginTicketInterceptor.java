@@ -25,6 +25,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
     @Autowired
     private HostHolder hostHolder;
 
+    //在controller调用之前执行
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -46,6 +47,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    //在Controller的方法调用之后执行，但是它会在DispatcherServlet进行视图的渲染之前执行
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         User user = hostHolder.getUser();
@@ -54,6 +56,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
         }
     }
 
+    //整个请求完成之后，也就是DispatcherServlet渲染了视图后执行
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         hostHolder.clear();

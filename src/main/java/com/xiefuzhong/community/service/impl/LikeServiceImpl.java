@@ -24,16 +24,19 @@ public class LikeServiceImpl implements LikeService {
 
                 String entityLikeKey = RedisKeyUtil.getEntityLikeKey(entityType, entityId);
                 String userLikeKey = RedisKeyUtil.getUserLikeKey(entityUserId);
-                //判断userId是否在这个集合里面
+                //判断userId是否在这个集合里面:查询一定要放在事务外面
                 boolean isMember = operations.opsForSet().isMember(entityLikeKey, userId);
+                //开启redis事务
                 operations.multi();
                 if (isMember) {
                     //发现在，就删除
                     operations.opsForSet().remove(entityLikeKey, userId);
+                    //处理用户的赞的数量：取消了就减一
                     operations.opsForValue().decrement(userLikeKey);
                 } else {
                     //发现没在
                     operations.opsForSet().add(entityLikeKey, userId);
+                    //别人给用户点赞了就加一
                     operations.opsForValue().increment(userLikeKey);
                 }
 

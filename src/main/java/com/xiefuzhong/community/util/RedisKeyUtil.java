@@ -7,8 +7,8 @@ public class RedisKeyUtil {
     private static final String PREFIX_ENTITY_LIKE = "like:entity";
 
     private static final String PREFIX_USER_LIKE = "like:user";
-    private static final String PREFIX_FOLLOWEE = "followee";
-    private static final String PREFIX_FOLLOWER = "follower";
+    private static final String PREFIX_FOLLOWEE = "followee"; //某个用户关注的目标
+    private static final String PREFIX_FOLLOWER = "follower"; //它的粉丝
     private static final String PREFIX_KAPTCHA = "kaptcha";
     private static final String PREFIX_TICKET = "ticket";
     private static final String PREFIX_USER = "user";
@@ -25,7 +25,7 @@ public class RedisKeyUtil {
         return PREFIX_USER_LIKE + SPLIT + userId;
     }
 
-    // 某个用户关注的实体
+    // 某个用户关注的实体（用户和实体的关系）
     // followee:userId:entityType -> zset(entityId,now)
     public static String getFolloweeKey(int userId, int entityType) {
         return PREFIX_FOLLOWEE + SPLIT + userId + SPLIT + entityType;

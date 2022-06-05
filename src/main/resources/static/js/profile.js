@@ -4,6 +4,7 @@ $(function(){
 
 function follow() {
 	var btn = this;
+	//通过样式进行判断是否能够关注
 	if($(btn).hasClass("btn-info")) {
 		// 关注TA
 		$.post(
