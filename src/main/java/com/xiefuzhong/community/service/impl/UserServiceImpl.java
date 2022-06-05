@@ -9,9 +9,11 @@ import com.xiefuzhong.community.service.UserService;
 import com.xiefuzhong.community.util.CommunityConstant;
 import com.xiefuzhong.community.util.CommunityUtil;
 import com.xiefuzhong.community.util.MailClient;
+import com.xiefuzhong.community.util.RedisKeyUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -22,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService , CommunityConstant {
@@ -36,7 +39,9 @@ public class UserServiceImpl implements UserService , CommunityConstant {
     private TemplateEngine templateEngine;
 
     @Autowired
-    private LoginTicketMapper  loginTicketMapper;
+    private RedisTemplate redisTemplate;
+//    @Autowired
+//    private LoginTicketMapper  loginTicketMapper;
 
     @Value("${community.path.domain}")
     private String domain;
@@ -50,7 +55,12 @@ public class UserServiceImpl implements UserService , CommunityConstant {
      * @return
      */
     public User findUserById(int id) {
-        return userMapper.selectById(id);
+       // return userMapper.selectById(id);
+        User user = getCache(id);
+        if (user == null){
+           user = initCache(id);
+        }
+        return  user;
     }
 
 
@@ -110,6 +120,7 @@ public class UserServiceImpl implements UserService , CommunityConstant {
         //http://localhost:8080/community/activate/101/code
         String url = domain + contextPath + "/activate/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
+        //通过TemplateEngine 和Context 的配合，我们可以使用thymeleaf模版来生产html文件
         String content = templateEngine.process("/mail/activation", context);
         mailClient.sendMail(user.getEmail(), "账号激活", content);
 
@@ -132,6 +143,7 @@ public class UserServiceImpl implements UserService , CommunityConstant {
             return  ACTIVATION_REPEAT;
         }else if (user.getActivationCode().equals(code)){
             userMapper.updateStatus(userId,1);
+            clearCache(userId);
             //激活成功
             return  ACTIVATION_SUCCESS;
         }else {
@@ -189,7 +201,13 @@ public class UserServiceImpl implements UserService , CommunityConstant {
         loginTicket.setTicket(CommunityUtil.generateUUID());
         loginTicket.setStatus(0);
         loginTicket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds * 1000));
-        loginTicketMapper.insertLoginTicket(loginTicket);
+
+        //重构开始=======将它存到redis中================================================
+        //   loginTicketMapper.insertLoginTicket(loginTicket);
+        String  redisKey = RedisKeyUtil.getTicketKey(loginTicket.getTicket());
+        //存到redis中
+        redisTemplate.opsForValue().set(redisKey,loginTicket);
+        //重构结束=============================================================
 
         //浏览器只需要记录这个凭证：这个表有点类似于session功能, 用来保存用户登录信息凭证
         map.put("ticket", loginTicket.getTicket());
@@ -198,22 +216,30 @@ public class UserServiceImpl implements UserService , CommunityConstant {
 
     //退出登录
     @Override
-    public void logout( String ticket)  {
-        loginTicketMapper.updateStatus(ticket, 1);
+    public void logout( String ticket){
+        //loginTicketMapper.updateStatus(ticket, 1);
+        String  redisKey = RedisKeyUtil.getTicketKey(ticket);
+        LoginTicket  loginTicket = (LoginTicket) redisTemplate.opsForValue().get(redisKey);
+        loginTicket.setStatus(1);
+        redisTemplate.opsForValue().set(redisKey,loginTicket);
+
     }
 
     //通过ticket查询出一条ticket数据
     @Override
     public LoginTicket findLoginTicket(String ticket) {
-        return loginTicketMapper.selectByTicket(ticket);
+//        return loginTicketMapper.selectByTicket(ticket);
+        String  redisKey = RedisKeyUtil.getTicketKey(ticket);
+        return (LoginTicket) redisTemplate.opsForValue().get(redisKey);
     }
 
     //更新用户账号头像
     @Override
-    public void updateHeader(int userId, String headerUrl) {
+    public int updateHeader(int userId, String headerUrl) {
         //        return userMapper.updateHeader(userId, headerUrl);
-        int rows = userMapper.updateHeader(userId, headerUrl);
-//        clearCache(userId);
+        int  rows = userMapper.updateHeader(userId, headerUrl);
+        clearCache(userId);
+        return  rows;
     }
 
     @Override
@@ -221,10 +247,23 @@ public class UserServiceImpl implements UserService , CommunityConstant {
         return userMapper.selectByName(username);
     }
 
-
+    //=========redis重构user开始=========
+    //1.优先从缓存中取值
+    private User  getCache(int userId){
+        String redisKey = RedisKeyUtil.getUserKey(userId);
+        return (User) redisTemplate.opsForValue().get(redisKey);
+    }
+    //2.取不到时初始化缓存数据
+    private User initCache(int userId){
+        User user = userMapper.selectById(userId);
+        String  redisKey = RedisKeyUtil.getUserKey(userId);
+        redisTemplate.opsForValue().set(redisKey,user,60 * 60, TimeUnit.SECONDS);//一个小时过期
+        return  user;
+    }
     // 3.数据变更时清除缓存数据
-//    private void clearCache(int userId) {
-//        String redisKey = RedisKeyUtil.getUserKey(userId);
-//        redisTemplate.delete(redisKey);
-//    }
+    private void clearCache(int userId) {
+        String redisKey = RedisKeyUtil.getUserKey(userId);
+        redisTemplate.delete(redisKey);
+    }
+    //=====重构结束==============================
 }

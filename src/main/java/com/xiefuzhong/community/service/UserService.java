@@ -20,7 +20,7 @@ public interface UserService {
 
     User findUserById(int userId);
 
-    void updateHeader(int id, String headerUrl);
+    int updateHeader(int id, String headerUrl);
 
     User findUserByName(String username);
 
