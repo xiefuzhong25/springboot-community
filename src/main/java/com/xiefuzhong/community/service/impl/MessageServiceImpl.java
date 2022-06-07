@@ -3,6 +3,7 @@ package com.xiefuzhong.community.service.impl;
 
 import com.xiefuzhong.community.dao.MessageMapper;
 import com.xiefuzhong.community.entity.Message;
+import com.xiefuzhong.community.service.MessageService;
 import com.xiefuzhong.community.util.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.List;
 
 @Service
-public class MessageServiceImpl {
+public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private MessageMapper messageMapper;
@@ -47,6 +48,23 @@ public class MessageServiceImpl {
 
     public int readMessage(List<Integer> ids) {
         return messageMapper.updateStatus(ids, 1);
+    }
+
+    //系统通知业务==
+    public Message findLatestNotice(int userId, String topic) {
+        return messageMapper.selectLatestNotice(userId, topic);
+    }
+
+    public int findNoticeCount(int userId, String topic) {
+        return messageMapper.selectNoticeCount(userId, topic);
+    }
+
+    public int findNoticeUnreadCount(int userId, String topic) {
+        return messageMapper.selectNoticeUnreadCount(userId, topic);
+    }
+
+    public List<Message> findNotices(int userId, String topic, int offset, int limit) {
+        return messageMapper.selectNotices(userId, topic, offset, limit);
     }
 
 }

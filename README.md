@@ -242,3 +242,79 @@
         处理每次请求时，都要查询用户的登录凭证，访问频率非常高
     使用redis缓存用户信息
         处理每次请求时，都要根据凭证查询用户信息，访问的频率非常高
+        
+22.kafka相关知识
+    早生有关原理：
+        阻塞队列
+            BlockingQueue（接口）
+                解决线程通信的问题
+                阻塞方法：put（存入队列） take（队列中取出）
+            生产者消费者模式
+                生产者：产生数据的线程
+                消费者：使用数据的线程
+            实现类
+                ArrayBlockingQueue
+                LinkedBlockingQueue
+                PriorityBlockingQueue,SynchronousQueue,DelayQueue等
+    Kafka入门
+        简介
+            kafka是一个分布式的流媒体平台
+            应用：消息系统(本次使用），日志收集，用户行为追踪，流式处理
+        特点
+            高吞吐，消息持久化（硬盘的顺序读写速度很快，高可用），高可靠，高拓展性
+        术语
+            Broker（每一台kafka服务器）,Zookeeper（用来管理集群）
+            Topic（主题【存储消息的位置】：点对点，发布订阅方式【kafka使用这种】）,Partition（对主题做分区，提高并发能力）,Offset（消息在分区存放的位置索引）
+            Leader Replica（主副本：数据备，还可以处理数据）,Follower Replica（从副本：不可以处理数据，只做备份用）
+    window使用
+        修改 zookeeper.properties，server.properties中的一个路径
+        启动window中zookeeper
+            ① d:
+            ② cd   D:\kafka\kafka_2.13-2.7.1
+            ③ bin\windows\zookeeper-server-start.bat config\zookeeper.properties   
+        启动kafka
+            d:
+            cd  D:\kafka\kafka_2.13-2.7.1
+            bin\windows\kafka-server-start.bat config\server.properties 
+        创建主题
+            d:
+            cd D:\kafka\kafka_2.13-2.7.1\bin\windows
+            ③ 创建主题：
+                kafka-topics.bat --create --bootstrap-server  localhost:9092 --replication-factor 1 --partitions 1 --topic test
+            ④ 查看主题
+                kafka-topics.bat --list --bootstrap-server localhost:9092
+        生产者往哪一个服务器，哪一个主题发消息
+            d:
+            cd D:\kafka\kafka_2.13-2.7.1\bin\windows
+            kafka-console-producer.bat --broker-list localhost:9092 --topic test
+        消费者在哪个服务器，主题消费
+            d:
+            cd D:\kafka\kafka_2.13-2.7.1\bin\windows
+            kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test --from-beginning
+23.spring整合kafka
+    引入依赖
+        spring-kafka
+    配置kafka
+        配置server,consumer
+    访问kafka
+        生产者
+            kafkaTemplate.send(topic,data)
+        消费者
+            @KafkaListener(topics = {"test"})  
+            public void handleMessage(ConsumerRecord record) {}
+24.发送系统通知
+    触发事件（主题）
+        评论后，发布通知
+        点赞后，发布通知
+        关注后，发布通知
+    处理事件
+        封装事件对象
+        开发事件生产者
+        开发事件消费者        
+25.显示系统通知
+    通知列表
+        显示评论，点赞，关注三种类型的通知
+    通知详情
+        分页显示某一类主题所包含的通知
+    未读消息
+        在页面头部显示所有的未读消息数量          
