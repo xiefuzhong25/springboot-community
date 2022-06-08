@@ -1,10 +1,8 @@
 package com.xiefuzhong.community.controller;
 
 
-import com.xiefuzhong.community.entity.Comment;
-import com.xiefuzhong.community.entity.DiscussPost;
-import com.xiefuzhong.community.entity.Page;
-import com.xiefuzhong.community.entity.User;
+import com.xiefuzhong.community.entity.*;
+import com.xiefuzhong.community.event.EventProducer;
 import com.xiefuzhong.community.service.CommentService;
 import com.xiefuzhong.community.service.DiscussPostService;
 import com.xiefuzhong.community.service.LikeService;
@@ -41,6 +39,9 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private LikeService  likeService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussPost(String title, String content) {
@@ -55,6 +56,16 @@ public class DiscussPostController implements CommunityConstant {
         post.setContent(content);
         post.setCreateTime(new Date());
         discussPostService.addDiscussPost(post);
+
+        //触发发帖事件：把新发布的贴子存到es服务器里
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(user.getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(post.getId());
+        eventProducer.fireEvent(event);
+
+
 
         // 报错的情况,将来统一处理.
         return CommunityUtil.getJSONString(0, "发布成功!");

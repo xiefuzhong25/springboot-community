@@ -317,4 +317,47 @@
     通知详情
         分页显示某一类主题所包含的通知
     未读消息
-        在页面头部显示所有的未读消息数量          
+        在页面头部显示所有的未读消息数量    
+         
+26.Elasticsearch入门（类比于一个数据库）
+    简介
+        一个分布式的，Restful风格的搜索引擎
+        支持对各种类型的数据的检索
+        搜索速度快，可以提供实时的搜索服务
+        便于水平拓展，美秒可以以处理PB级海量数据
+    术语
+        索引:数据库
+        类型：表（想废弃，用索引来代替对应表）（6.0用一个单词来代替了类型，7.0就彻底废弃了）
+        文档：行，一条数据
+        字段：一列
+        --------------------------------
+        集群：
+        节点：集群中每一台es服务器
+        分片：对索引的进一步划分，提高并发能力
+        副本：对分片的备份，提高可用性 
+    使用
+        1.命令行示例：curl -X GET  "localhost:9200/_cat/health?v"
+        2.postman
+        
+27.spring整合Elasticsearch
+    引入依赖
+        spring-boot-starter-elasticsearch
+    配置elasticsearch
+        cluster-name,cluster-nodes
+    Spring Data Elasticsearch
+        ElasticsearchTemplate
+        ElasticsearchRepository
+        
+28.开发社区搜索功能
+    搜索服务
+        将贴子保存到Elasticsearch服务器
+        从Elasticsearch服务器删除贴子
+        从Elasticsearch服务器搜索贴子
+    发布事件
+        发布贴子时，将贴子异步的提交到elasticsearch服务器
+        增加评论时，将贴子异步的提交到elasticsearch服务器
+        在消费组件中增加一个方法，消费贴子发布事件
+    显示结果
+        在控制器中处理搜索请求，在HTML上显示搜索结果
+   
+        
