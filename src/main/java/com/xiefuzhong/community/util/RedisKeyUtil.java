@@ -14,7 +14,7 @@ public class RedisKeyUtil {
     private static final String PREFIX_USER = "user"; //用户相关
     private static final String PREFIX_UV = "uv";
     private static final String PREFIX_DAU = "dau";
-    private static final String PREFIX_POST = "post";
+    private static final String PREFIX_POST = "post";   //贴子热度有关
 
     // 某个实体的赞
     // like:entity:entityType:entityId -> set(userId)

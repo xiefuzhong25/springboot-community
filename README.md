@@ -394,3 +394,42 @@
         版主可以看到置顶，加精按钮
         管理员可以看到删除按钮
         
+32.Redis高级数据类型【看内存的使用量：info memory】
+    HyperLogLog（超级日志）
+        采用一种基数算法，用于完成独立总数的统计
+        占据空间小，无论统计多少个数据，只占12k的内存空间
+        不精确统计算法，标准误差为0.81%
+    Bitmap（位图）【其实就是一种独特的string类型数据，默认就是false】
+        不是一种独立的数据结构，实际上就是字符串
+        支持按位存取数据，可以将其看出是byte数组
+        适合存储索大量的连续的数据布尔值（例如统计人一年中到了或者没到使用0,1表示）
+        
+33.网站数据统计
+    UV(Unique Visitor)
+        独立访客，需要通过用户IP排重统计数据
+        每次访问都要进行统计
+        HyperLogLog,性能好，且存储空间小
+    DAU(Daily Active User)
+        日活跃用户，需要通过用户ID排重统计数据
+        访问过一次，则认为其活跃
+        Bitmap,性能好，且可以统计精确的结果
+        
+34.任务的执行和调度
+    JDK线程池
+        ExecutorService
+        ScheduledExecutorService
+    Spring 线程池
+        ThreadPoolTaskExecutor
+        ThreadPoolTaskScheduler
+    分布式定时任务
+        Spring Quartz
+        
+35.热帖排行(将帖子id保存到redis中，然后用job自动去里面取出来，查看贴子状态，计算分数)
+    Hacker News：p:投票数，T:从新闻发布到现在的时间间隔，G:是系数，例如1.5啥的 
+        score = (p-1) /(T+2) ^ G
+    StackOverflow
+        (log(Qviews)*4) + ( (Qanswers * Qupdated)/5 ) + sum(Ascores)
+        ------------------------------------------------------------
+        ((QageInhours + 1) - ((QageInHours - Qupdated)/2)) ^ 1.5
+    Nowcoder
+        log(精华分 + 评论数*10 + 点赞数*2 + 收藏数*2 ) + （发布时间 - 牛客纪元）

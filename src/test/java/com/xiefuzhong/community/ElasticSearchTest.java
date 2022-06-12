@@ -73,14 +73,14 @@ public class ElasticSearchTest {
     @Test
     public void testInsertList(){
         //批量添加数据到es
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(101,0,100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(102,0,100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(103,0,100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(111,0,100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(133,0,100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(134,0,100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(138,0,100));
-        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(149,0,100));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(101,0,100,0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(102,0,100,0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(103,0,100,0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(111,0,100,0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(133,0,100,0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(134,0,100,0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(138,0,100,0));
+        discussPostRepository.saveAll(discussPostMapper.selectDiscussPosts(149,0,100,0));
     }
 
     //修改一下

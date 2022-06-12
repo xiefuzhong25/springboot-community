@@ -5,8 +5,12 @@ import com.xiefuzhong.community.dao.UserMapper;
 import com.xiefuzhong.community.entity.DiscussPost;
 import com.xiefuzhong.community.entity.User;
 import com.xiefuzhong.community.util.CommunityUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
@@ -28,6 +32,8 @@ import java.util.Date;
 @Service
 //@Scope("request")
 public class AtestService {
+
+    private  static  final  Logger logger = LoggerFactory.getLogger(AtestService.class) ;
 
     @Autowired
     private UserMapper  userMapper;
@@ -149,5 +155,13 @@ public class AtestService {
         });
     }
 
+    @Async  //可以让该方法在多线程环境下，被异步执行
+    public void execute1(){
+        logger.debug("execute1--");
+    }
 
+//    @Scheduled(initialDelay = 10000,fixedRate = 1000)
+    public void execute2(){
+        logger.debug("execute2--");
+    }
 }

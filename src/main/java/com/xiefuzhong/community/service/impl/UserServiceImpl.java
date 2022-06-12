@@ -265,7 +265,7 @@ public class UserServiceImpl implements UserService , CommunityConstant {
     }
     //=====重构结束==============================
 
-    //获得用户权限
+    //获得用户权限（使用security需要）
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(int userId) {
         {

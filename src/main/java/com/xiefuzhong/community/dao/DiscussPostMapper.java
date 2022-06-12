@@ -10,7 +10,8 @@ import java.util.List;
 @Mapper
 public interface DiscussPostMapper {
 
-    List<DiscussPost> selectDiscussPosts(int userId, int offset, int limit);
+    //orderModel支持两种贴子展示模式；0- 一种是普通时间降序;1-一种是热度排序
+    List<DiscussPost> selectDiscussPosts(int userId, int offset, int limit,int orderModel);
 
     // @Param注解用于给参数取别名,
     // 如果只有一个参数,并且在<if>里使用,则必须加别名.

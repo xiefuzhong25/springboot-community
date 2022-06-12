@@ -9,7 +9,9 @@ import com.xiefuzhong.community.service.CommentService;
 import com.xiefuzhong.community.service.DiscussPostService;
 import com.xiefuzhong.community.util.CommunityConstant;
 import com.xiefuzhong.community.util.HostHolder;
+import com.xiefuzhong.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,9 @@ public class CommentController implements CommunityConstant {
 
     @Autowired
     private DiscussPostService discussPostService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     //添加评论
     @RequestMapping(path = "/add/{discussPostId}", method = RequestMethod.POST)
@@ -72,6 +77,9 @@ public class CommentController implements CommunityConstant {
             eventProducer.fireEvent(event);
         }
 
+        //计算贴子分数
+        String redisKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(redisKey,discussPostId);
 
         return "redirect:/discuss/detail/" + discussPostId;
     }
