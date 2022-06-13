@@ -404,7 +404,7 @@
         支持按位存取数据，可以将其看出是byte数组
         适合存储索大量的连续的数据布尔值（例如统计人一年中到了或者没到使用0,1表示）
         
-33.网站数据统计
+33.网站数据统计（超级管理员身份访问 /data）
     UV(Unique Visitor)
         独立访客，需要通过用户IP排重统计数据
         每次访问都要进行统计
@@ -425,11 +425,63 @@
         Spring Quartz
         
 35.热帖排行(将帖子id保存到redis中，然后用job自动去里面取出来，查看贴子状态，计算分数)
+    计算方式例子：
     Hacker News：p:投票数，T:从新闻发布到现在的时间间隔，G:是系数，例如1.5啥的 
         score = (p-1) /(T+2) ^ G
     StackOverflow
         (log(Qviews)*4) + ( (Qanswers * Qupdated)/5 ) + sum(Ascores)
         ------------------------------------------------------------
         ((QageInhours + 1) - ((QageInHours - Qupdated)/2)) ^ 1.5
-    Nowcoder
+    Nowcoder（该系统采用这种方式）
         log(精华分 + 评论数*10 + 点赞数*2 + 收藏数*2 ) + （发布时间 - 牛客纪元）
+    
+36.生成长图（使用wk)
+    wkhtmltoppdf(工具)
+        wkhtmltoppfd url file
+        wkhtmltoimage url file
+        wkhtmltoimage  --quality 75  url file   【将图片压缩到原有质量的百分之75就足够了】
+    java
+        Runtime,getRuntime().exec()
+        
+37.将文件上传至云服务器（未做）
+    客户端上传
+        客户端将数据提交给云服务器，并且等待其响应
+        用户上传头像时，将表单数据提交给云服务器
+    服务器直传
+        应用服务器将数据直接提交给云服务器，并等待其响应
+        分享时，服务端将自动生成的图片，直接提交给云服务器
+        
+38.优化网站的性能(热度贴子使用本地缓存)
+    本地缓存
+        将数据存在应用服务器上，性能最好
+        常用缓存工具：Ehcache 、 Guava 、 Caffeine【采用】等
+    分布式缓存
+        将数据缓存在NoSQL数据库上，跨服务器
+        常用缓存工具：MemCache、Redis等
+    多级缓存
+        一级缓存（本地缓存）> 二级缓存（分布式缓存） > DB
+        避免缓存雪崩（缓存失效，大量请求直达DB),提高系统的可用性
+    拓展：
+        caffeine 3.0.0 以上不支持 JDK8 编译
+        
+39.单元测试
+    Spring Boot Testing
+        依赖：spring-boot-starter-test
+        包括：Junit,Spring Test,AssertJ,...
+    Test Case
+        要求:保证测试方法的独立性
+        步骤：初始化数据，执行测试代码，验证测试结果，清理测试数据
+        常用注解： @BeforeClass ,@AfterClass , @Before , @After 
+        
+40.项目监控
+    Spring Boot Actuator
+        Endpoints: 监控应用的入口，Spring Boot内置了很多端点，也支持自定义端点
+        监控方式： HTTP 或 JMX
+        访问路径： 例如 "/actuator/health"
+        注意事项： 按需配置暴露的端点，并对所有端点进行权限控制
+    拓展：
+        访问：http://localhost:8080/community/actuator/loggers【beans】【health】
+        自定义端点:验证数据库连接是否有问题：http://localhost:8080/community/actuator/database
+        
+        
+    
