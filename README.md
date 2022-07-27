@@ -70,7 +70,7 @@
         编写过滤敏感词的方法
         
 8.发布贴子
-    AJAX请求，添加数据
+    AJAX请求，添加数据  
     
 9.贴子详情
     DiscussPostMapper
