@@ -20,6 +20,9 @@ public class Goods {
         return this;
     }
 
+
+
+
     public Integer getStore() {
         return store;
     }
